@@ -6,33 +6,7 @@
     🌱 Plant Watcher
 </h1>
 
-<form
-    action="/plants"
-    method="post"
-    class="bg-white p-4 rounded-xl shadow mb-8"
->
-    <div class="mb-4">
-        <input
-            type="text"
-            name="name"
-            placeholder="Plant name"
-            class="border p-2 w-full rounded"
-        >
-    </div>
 
-    <div class="mb-4">
-        <input
-            type="text"
-            name="watering_range"
-            placeholder="3"
-            class="border p-2 w-full rounded"
-        >        
-    </div>
-
-    <button class="bg-green-600 text-white px-4 py-2 rounded">
-        Add plant
-    </button>
-</form>
 
 <div class="space-y-4">
     {% for plant in plants %}
@@ -42,15 +16,13 @@
             <h2 class="font-bold text-xl">
                 {{ plant.name }}
             </h2>
-
+            <p class="text-sm text-gray-500">
+                Last time watered <b>{{ plant.watered_label}}</b>
+            </p>
             <p>
                 Every {{ plant.watering_interval_min }} to {{ plant.watering_interval_max }} days
             </p>
 
-            <p class="text-sm text-gray-500">
-                Last watered:
-                {{ plant.last_watered_at }}
-            </p>
         </div>
 
         <form action="/plants/{{ plant.id }}/water" method="post">

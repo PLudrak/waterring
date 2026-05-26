@@ -16,7 +16,7 @@ def parse_watering_range(value: str) -> tuple:
 
 def create_plant(db, name: str, watering_interval):
 
-    watering_interval_max, watering_interval_min = parse_watering_range(
+    watering_interval_min, watering_interval_max = parse_watering_range(
         watering_interval
     )
 
