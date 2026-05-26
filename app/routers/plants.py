@@ -5,6 +5,7 @@ from datetime import datetime
 
 from app.database import get_db
 from app.models import Plant
+from app.services.plant_service import parse_watering_range
 
 router = APIRouter()
 
@@ -12,14 +13,14 @@ router = APIRouter()
 @router.post("/plants")
 def create_plant(
     name: str = Form(...),
-    watering_interval_min: int = Form(...),
-    watering_interval_max: int = Form(...),
+    watering_range: str = Form(...),
     db: Session = Depends(get_db),
 ):
+    watering_interval_min, watering_interval_max = parse_watering_range(watering_range)
     plant = Plant(
         name=name,
-        watering_interval_max=watering_interval_max,
         watering_interval_min=watering_interval_min,
+        watering_interval_max=watering_interval_max,
     )
 
     db.add(plant)

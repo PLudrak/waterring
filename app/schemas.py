@@ -4,8 +4,7 @@ from datetime import datetime
 
 class PlantCreate(BaseModel):
     name: str
-    watering_interval_min: int
-    watering_interval_max: int
+    watering_range: str
 
 
 class PlantResponse(BaseModel):

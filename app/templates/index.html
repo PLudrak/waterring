@@ -22,17 +22,11 @@
 
     <div class="mb-4">
         <input
-            type="number"
-            name="watering_interval_min"
+            type="text"
+            name="watering_range"
             placeholder="3"
             class="border p-2 w-full rounded"
         >        
-        <input
-            type="number"
-            name="watering_interval_max"
-            placeholder="4"
-            class="border p-2 w-full rounded"
-        >
     </div>
 
     <button class="bg-green-600 text-white px-4 py-2 rounded">
@@ -50,7 +44,7 @@
             </h2>
 
             <p>
-                Every {{ plant.watering_interval_min }} to {{ plant.watering_interval_min }} days
+                Every {{ plant.watering_interval_min }} to {{ plant.watering_interval_max }} days
             </p>
 
             <p class="text-sm text-gray-500">
