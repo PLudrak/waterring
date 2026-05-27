@@ -12,15 +12,13 @@
             <h2 class="font-bold text-xl">
                 {{ plant.name }}
             </h2>
-
+            <p class="text-sm text-gray-500">
+                Last time watered <b>{{ plant.watered_label}}</b>
+            </p>
             <p>
                 Every {{ plant.watering_interval_min }} to {{ plant.watering_interval_max }} days
             </p>
 
-            <p class="text-sm text-gray-500">
-                Last watered:
-                {{ plant.last_watered_at }}
-            </p>
         </div>
 
         <form action="/plants/{{ plant.id }}/water" method="post">
