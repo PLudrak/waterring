@@ -17,11 +17,3 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
 app.include_router(plants.router)
-
-
-@app.get("/")
-def home(request: Request, db: Session = Depends(get_db)):
-    plants = db.query(Plant).all()
-    return templates.TemplateResponse(
-        request, "index.html", {"request": request, "plants": plants}
-    )

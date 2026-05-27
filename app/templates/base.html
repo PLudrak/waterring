@@ -7,9 +7,48 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-green-50">
-    <div class="max-w-3xl mx-auto p-8">
-        {% block content %}{% endblock %}
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md border-b border-green-100">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
+
+            <a
+                href="/"
+                class="bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition"
+            >
+                Watering
+            </a>
+
+            <a
+                href="/manage-plants"
+                class="bg-white border border-green-600 text-green-700 px-4 py-2 rounded-lg font-medium hover:bg-green-50 transition"
+            >
+                Manage Plants
+            </a>
+
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-5xl mx-auto p-8">
+        {% block content %}
+        {% endblock %}
     </div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const scrollY = sessionStorage.getItem("scrollY");
+
+        if (scrollY !== null) {
+            window.scrollTo(0, parseInt(scrollY));
+            sessionStorage.removeItem("scrollY");
+        }
+    });
+
+    window.addEventListener("beforeunload", () => {
+        sessionStorage.setItem("scrollY", window.scrollY);
+    });
+</script>
 </body>
 </html>

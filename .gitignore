@@ -2,3 +2,4 @@
 __pycache__/
 *.pyc
 app/routers/__pycache__/
+app/routers/__pycache__/plants.cpython-314.pyc
