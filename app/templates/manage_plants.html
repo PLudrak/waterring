@@ -2,67 +2,57 @@
 
 {% block content %}
 <h1 class="text-4xl font-bold mb-8">
-    🌱 Plant Watcher
+	🌱 Plant Watcher
 </h1>
+<form action="/plants" method="post" class="bg-white p-4 rounded-xl shadow mb-8">
+	<div class="mb-4">
+		<input type="text" name="name" placeholder="Plant name" class="border p-2 w-full rounded">
+	</div>
 
-<form
-    action="/plants"
-    method="post"
-    class="bg-white p-4 rounded-xl shadow mb-8"
->
-    <div class="mb-4">
-        <input
-            type="text"
-            name="name"
-            placeholder="Plant name"
-            class="border p-2 w-full rounded"
-        >
-    </div>
+	<div class="mb-4">
+		<input type="text" name="watering_range" placeholder="3" class="border p-2 w-full rounded">
+	</div>
 
-    <div class="mb-4">
-        <input
-            type="text"
-            name="watering_range"
-            placeholder="3"
-            class="border p-2 w-full rounded"
-        >        
-    </div>
-
-    <button class="bg-green-600 text-white px-4 py-2 rounded">
-        Add plant
-    </button>
+	<button class="bg-green-600 text-white px-4 py-2 rounded">
+		Add plant
+	</button>
 </form>
-{% for plant in plants %}
+<div class="space-y-4">
+
+	{% for plant in plants %}
 	{% if edit_id == plant.id %}
 
-	<form method="post" action="/plants/{{ plant.id }}/edit">
+	<div class="bg-green-600 p-4 rounded-xl shadow flex justify-between">
 
-		<input
-			type="text"
-			name="name"
-			value="{{ plant.name }}"
-		>
-		<input
-			type="int"
-			name="watering_interval_min"
-			value="{{ plant.watering_interval_min }}"
-		>
-		<input
-			type="int"
-			name="watering_interval_max"
-			value="{{ plant.watering_interval_max }}"
-		>
-		<button>Save</button>
+		<form method="post" action="/plants/{{ plant.id }}/edit">
+			<div>
+				Name:
+				<input type="text" name="name" value="{{ plant.name }}">
+			</div>
+			<div>
+				Min days before watering:
+				<input type="int" name="watering_interval_min" value="{{ plant.watering_interval_min }}">
+			</div>
+			<div>
+				Max days before watering
+				<input type="int" name="watering_interval_max" value="{{ plant.watering_interval_max }}">
+			</div>
 
-	</form>
+			<button>Save</button>
+
+		</form>
+	</div>
 
 	{% else %}
 
-	<h2>{{ plant.name }}</h2>
+	<div class="bg-white p-4 rounded-xl shadow flex justify-between">
+		<h2>{{ plant.name }}</h2>
 
-	<a href="/manage-plants?edit={{ plant.id }}">
-		Edit
-	</a>
+		<a href="/manage-plants?edit={{ plant.id }}">
+			Edit
+		</a>
+	</div>
 	{% endif %}
 	{% endfor %}
+</div>
 {% endblock %}
