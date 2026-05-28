@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
-from datetime import datetime
+from datetime import datetime, timezone
 
 from app.templates import templates
 from app.services.date_service import days_since_watered, watering_text, watering_status
@@ -46,7 +46,9 @@ def water_plant(plant_id: int, db: Session = Depends(get_db)):
 
     plant = db.query(Plant).get(plant_id)
 
-    plant.last_watered_at = datetime.utcnow()
+    plant.last_watered_at = datetime.now(timezone.utc).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
 
     db.commit()
 
@@ -78,7 +80,9 @@ async def update_plant(plant_id: int, request: Request, db: Session = Depends(ge
     plant.name = form["name"]
     plant.watering_min_days = int(form["watering_interval_min"])
     plant.watering_max_days = int(form["watering_interval_max"])
-
+    plant.last_watered_at = datetime.fromisoformat(form["last_watered"]).replace(
+        tzinfo=timezone.utc
+    )
     db.commit()
 
     return RedirectResponse("/manage-plants", status_code=303)

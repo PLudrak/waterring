@@ -1,9 +1,9 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 def days_since_watered(last_watered_at: datetime) -> int:
-    delta = datetime.utcnow() - last_watered_at
-    return delta.days
+    now = datetime.now(timezone.utc)
+    return (now.date() - last_watered_at.date()).days
 
 
 def watering_text(days_since_watered) -> str:

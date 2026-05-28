@@ -50,7 +50,7 @@
 			type="date"
 			name="last_watered"
 			class="border rounded p-2"
-			value = "{{ plant.last_watered_at}}"
+			value = "{{ plant.last_watered_at.strftime('%Y-%m-%d') }}"
 		>
 	</div>
 
@@ -64,7 +64,7 @@
 			type="number"
 			name="watering_interval_min"
 			value="{{ plant.watering_interval_min }}"
-			class="border rounded p-2 w-20"
+			class="border rounded p-2 w-10"
 		>
 
 		<span>to</span>
@@ -74,7 +74,7 @@
 			type="number"
 			name="watering_interval_max"
 			value="{{ plant.watering_interval_max }}"
-			class="border rounded p-2 w-20"
+			class="border rounded p-2 w-10"
 		>
 
 		<span>days</span>
@@ -93,7 +93,7 @@
 		></textarea>
 	</div>
 
-	<button class="bg-white rounded px-4 py-2 w-fit">
+	<button class="text-white bg-green-600 rounded px-4 py-2 w-fit">
 		Save
 	</button>
 	</form>
