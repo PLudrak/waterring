@@ -6,19 +6,15 @@
 </h1>
 <form action="/plants" method="post" class="bg-white p-4 rounded-xl shadow mb-8">
 	<div class="mb-4">
-		<input type="text" name="name" placeholder="Plant name" class="border p-2 w-full rounded">
+		<input required type="text" name="name" placeholder="Plant name" class="border p-2 w-full rounded">
 	</div>
 
 	<div class="mb-4">
-		<input type="text" name="watering_range" placeholder="3" class="border p-2 w-full rounded">
+		<input type="text" name="watering_range" placeholder="6-8" class="border p-2 w-full rounded">
 	</div>
 	<div class="mb-4">
-		<textarea
-			id="info"
-			name="info"
-			class="border rounded p-2"
-			rows="3"
-		></textarea>
+		<textarea id="info" name="info" class="border rounded p-2 w-full resize-none" rows="3"
+			placeholder="Add your plant description/informations"></textarea>
 	</div>
 
 	<button class="bg-green-600 text-white px-4 py-2 rounded">
@@ -32,80 +28,54 @@
 
 	<div class="ring-2 ring-green-500 bg-white rounded-xl p-4">
 
-	<form method="post" action="/plants/{{ plant.id }}/edit" class="flex flex-col gap-4">
+		<form method="post" action="/plants/{{ plant.id }}/edit" class="flex flex-col gap-4">
 
-<div class="flex items-center gap-2">
-		<label for="name">
-			Name:
-		</label>
+			<div class="flex items-center gap-2">
+				<label for="name">
+					Name:
+				</label>
 
-		<input
-			id="name"
-			type="text"
-			name="name"
-			value="{{ plant.name }}"
-			class="border rounded p-2"
-		>
+				<input id="name" type="text" name="name" value="{{ plant.name }}" class="border rounded p-2">
+			</div>
+
+			<div class="flex items-center gap-2">
+				<label for="last_watered">
+					Last watered
+				</label>
+
+				<input id="last_watered" type="date" name="last_watered" class="border rounded p-2"
+					value="{{ plant.last_watered_at.strftime('%Y-%m-%d') }}">
+			</div>
+
+			<div class="flex items-center gap-2">
+				<label for="watering_interval_min">
+					Watering every
+				</label>
+
+				<input id="watering_interval_min" type="number" name="watering_interval_min"
+					value="{{ plant.watering_interval_min }}" class="border rounded p-2 w-10">
+
+				<span>to</span>
+
+				<input id="watering_interval_max" type="number" name="watering_interval_max"
+					value="{{ plant.watering_interval_max }}" class="border rounded p-2 w-10">
+
+				<span>days</span>
+			</div>
+
+			<div class="flex items-center gap-2">
+				<label for="info">
+					Info
+				</label>
+
+				<textarea id="info" name="info" class="border rounded p-2" rows="3"></textarea>
+			</div>
+
+			<button class="text-white bg-green-600 rounded px-4 py-2 w-fit">
+				Save
+			</button>
+		</form>
 	</div>
-
-	<div class="flex items-center gap-2">
-		<label for="last_watered">
-			Last watered
-		</label>
-
-		<input
-			id="last_watered"
-			type="date"
-			name="last_watered"
-			class="border rounded p-2"
-			value = "{{ plant.last_watered_at.strftime('%Y-%m-%d') }}"
-		>
-	</div>
-
-	<div class="flex items-center gap-2">
-		<label for="watering_interval_min">
-			Watering every
-		</label>
-
-		<input
-			id="watering_interval_min"
-			type="number"
-			name="watering_interval_min"
-			value="{{ plant.watering_interval_min }}"
-			class="border rounded p-2 w-10"
-		>
-
-		<span>to</span>
-
-		<input
-			id="watering_interval_max"
-			type="number"
-			name="watering_interval_max"
-			value="{{ plant.watering_interval_max }}"
-			class="border rounded p-2 w-10"
-		>
-
-		<span>days</span>
-	</div>
-
-	<div class="flex items-center gap-2">
-		<label for="info">
-			Info
-		</label>
-
-		<textarea
-			id="info"
-			name="info"
-			class="border rounded p-2"
-			rows="3"
-		></textarea>
-	</div>
-
-	<button class="text-white bg-green-600 rounded px-4 py-2 w-fit">
-		Save
-	</button>
-	</form>
-</div>
 
 	{% else %}
 

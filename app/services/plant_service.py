@@ -3,6 +3,8 @@ from app.database import SessionLocal
 
 
 def parse_watering_range(value: str) -> tuple:
+    if not value or value.strip() == "":
+        return 6, 8
     if "-" in value:
         parts = value.split("-")
         parts_int = list(map(int, parts))

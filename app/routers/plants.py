@@ -30,7 +30,7 @@ def home(request: Request, db: Session = Depends(get_db)):
 @router.post("/plants")
 def create_plant_endpoint(
     name: str = Form(...),
-    watering_range: str = Form(...),
+    watering_range: str | None = Form(None),
     db: Session = Depends(get_db),
 ):
     plant = create_plant(db, name, watering_range)
