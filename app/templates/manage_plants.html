@@ -22,26 +22,82 @@
 	{% for plant in plants %}
 	{% if edit_id == plant.id %}
 
-	<div class="bg-green-600 p-4 rounded-xl shadow flex justify-between">
+	<div class="ring-2 ring-green-500 bg-white rounded-xl p-4">
 
-		<form method="post" action="/plants/{{ plant.id }}/edit">
-			<div>
-				Name:
-				<input type="text" name="name" value="{{ plant.name }}">
-			</div>
-			<div>
-				Min days before watering:
-				<input type="int" name="watering_interval_min" value="{{ plant.watering_interval_min }}">
-			</div>
-			<div>
-				Max days before watering
-				<input type="int" name="watering_interval_max" value="{{ plant.watering_interval_max }}">
-			</div>
+	<form method="post" action="/plants/{{ plant.id }}/edit" class="flex flex-col gap-4">
 
-			<button>Save</button>
+<div class="flex items-center gap-2">
+		<label for="name">
+			Name:
+		</label>
 
-		</form>
+		<input
+			id="name"
+			type="text"
+			name="name"
+			value="{{ plant.name }}"
+			class="border rounded p-2"
+		>
 	</div>
+
+	<div class="flex items-center gap-2">
+		<label for="last_watered">
+			Last watered
+		</label>
+
+		<input
+			id="last_watered"
+			type="date"
+			name="last_watered"
+			class="border rounded p-2"
+			value = "{{ plant.last_watered_at}}"
+		>
+	</div>
+
+	<div class="flex items-center gap-2">
+		<label for="watering_interval_min">
+			Watering every
+		</label>
+
+		<input
+			id="watering_interval_min"
+			type="number"
+			name="watering_interval_min"
+			value="{{ plant.watering_interval_min }}"
+			class="border rounded p-2 w-20"
+		>
+
+		<span>to</span>
+
+		<input
+			id="watering_interval_max"
+			type="number"
+			name="watering_interval_max"
+			value="{{ plant.watering_interval_max }}"
+			class="border rounded p-2 w-20"
+		>
+
+		<span>days</span>
+	</div>
+
+	<div class="flex items-center gap-2">
+		<label for="info">
+			Info
+		</label>
+
+		<textarea
+			id="info"
+			name="info"
+			class="border rounded p-2"
+			rows="3"
+		></textarea>
+	</div>
+
+	<button class="bg-white rounded px-4 py-2 w-fit">
+		Save
+	</button>
+	</form>
+</div>
 
 	{% else %}
 
