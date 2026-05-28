@@ -15,3 +15,5 @@ class Plant(Base):
     watering_interval_min = Column(Integer, default=3)
 
     last_watered_at = Column(DateTime, default=datetime.utcnow)
+    info = Column(String, default="")
+    place = Column(String, default="")

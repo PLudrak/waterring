@@ -3,7 +3,7 @@ from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from datetime import datetime, timezone
 
-from app.templates import templates
+from app.core.templates import templates
 from app.services.date_service import days_since_watered, watering_text, watering_status
 from app.database import get_db
 from app.models import Plant
