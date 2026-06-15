@@ -22,6 +22,7 @@ def home(request: Request, db: Session = Depends(get_db)):
         plant.status = watering_status(
             days_since, plant.watering_interval_max, plant.watering_interval_min
         )
+
     return templates.TemplateResponse(
         request, "index.html", {"request": request, "plants": plants}
     )
@@ -45,7 +46,6 @@ def create_plant_endpoint(
 def water_plant(plant_id: int, db: Session = Depends(get_db)):
 
     plant = db.query(Plant).get(plant_id)
-
     plant.last_watered_at = datetime.now(timezone.utc).replace(
         hour=0, minute=0, second=0, microsecond=0
     )
