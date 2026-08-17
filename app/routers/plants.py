@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Form, Request
+from fastapi import APIRouter, Depends, Form, Request, HTTPException
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from datetime import datetime, timezone
@@ -46,6 +46,9 @@ def create_plant_endpoint(
 def water_plant(plant_id: int, db: Session = Depends(get_db)):
 
     plant = db.query(Plant).get(plant_id)
+    if plant is None:
+        raise HTTPException(status_code=404, detail="Plant not found")
+
     plant.last_watered_at = datetime.now(timezone.utc).replace(
         hour=0, minute=0, second=0, microsecond=0
     )
@@ -77,12 +80,23 @@ async def update_plant(plant_id: int, request: Request, db: Session = Depends(ge
 
     form = await request.form()
 
-    plant.name = form["name"]
-    plant.watering_min_days = int(form["watering_interval_min"])
-    plant.watering_max_days = int(form["watering_interval_max"])
-    plant.last_watered_at = datetime.fromisoformat(form["last_watered"]).replace(
+    plant.name = str(form["name"])
+    plant.watering_min_days = int(str(form["watering_interval_min"]))
+    plant.watering_max_days = int(str(form["watering_interval_max"]))
+    plant.last_watered_at = datetime.fromisoformat(str(form["last_watered"])).replace(
         tzinfo=timezone.utc
     )
     db.commit()
 
     return RedirectResponse("/manage-plants", status_code=303)
+
+
+@router.get("/manage-places")
+def manage_places(request: Request, db: Session = Depends(get_db)):
+    plants = db.query(Plant).all()
+
+    return templates.TemplateResponse(
+        request,
+        "manage_places.html",
+        {"request": request, "plants": plants},
+    )
