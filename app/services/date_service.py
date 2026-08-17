@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 from app.models import Plant
+from app.services.plant_service import get_all_plants
 
 
 def days_since_watered(last_watered_at: datetime) -> int:
@@ -18,15 +19,15 @@ def watering_text(days_since_watered) -> str:
 
 def watering_status(days_since, days_max, days_min):
     if days_since < days_min:
-        return "🟢 Good"
+        return "good"
     elif days_since < days_max:
-        return "🟡 Water me!"
+        return "alert"
     else:
-        return "🔴 Water me!!!"
+        return "critical"
 
 
-def get_all_plants_description(db):
-    plants = db.query(Plant).all()
+def get_all_plants_info(db):
+    plants = get_all_plants(db)
 
     for plant in plants:
         days_since = days_since_watered(plant.last_watered_at)
@@ -35,3 +36,20 @@ def get_all_plants_description(db):
             days_since, plant.watering_interval_max, plant.watering_interval_min
         )
     return plants
+
+
+def get_plants_by_watering_status(db):
+    plants = get_all_plants_info(db)
+    plants_watered = []
+    plants_to_water = []
+    plants_critical = []
+    for plant in plants:
+        if plant.status == "critical":
+            plants_critical.append(plant)
+        elif plant.status == "alert":
+            plants_to_water.append(plant)
+        else:
+            plants_watered.append(plant)
+    for plant in plants_critical:
+        print(plant.name)
+    return plants_watered, plants_to_water, plants_critical

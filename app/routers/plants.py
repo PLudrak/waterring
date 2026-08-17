@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from datetime import datetime, timezone
 
 from app.core.templates import templates
-from app.services.date_service import get_all_plants_description
+from app.services.date_service import get_all_plants_info, get_plants_by_watering_status
 from app.database import get_db
 from app.models import Plant
 from app.services.plant_service import (
@@ -19,7 +19,8 @@ router = APIRouter()
 
 @router.get("/")
 def home_endpoint(request: Request, db: Session = Depends(get_db)):
-    plants = get_all_plants_description(db)
+    plants = get_all_plants_info(db)
+    get_plants_by_watering_status(db)
     return templates.TemplateResponse(
         request, "index.html", {"request": request, "plants": plants}
     )
