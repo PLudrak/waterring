@@ -17,3 +17,10 @@ class Plant(Base):
     last_watered_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
     info: Mapped[str] = mapped_column(default="")
     place: Mapped[str] = mapped_column(default="")
+
+
+class Place(Base):
+    __tablename__ = "places"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(nullable=False)
+    room: Mapped[str] = mapped_column()
