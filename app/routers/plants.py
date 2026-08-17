@@ -4,25 +4,22 @@ from sqlalchemy.orm import Session
 from datetime import datetime, timezone
 
 from app.core.templates import templates
-from app.services.date_service import days_since_watered, watering_text, watering_status
+from app.services.date_service import get_all_plants_description
 from app.database import get_db
 from app.models import Plant
-from app.services.plant_service import parse_watering_range, create_plant
+from app.services.plant_service import (
+    water_plant,
+    create_plant,
+    get_all_plants,
+    update_plant,
+)
 
 router = APIRouter()
 
 
 @router.get("/")
-def home(request: Request, db: Session = Depends(get_db)):
-    plants = db.query(Plant).all()
-
-    for plant in plants:
-        days_since = days_since_watered(plant.last_watered_at)
-        plant.watered_label = watering_text(days_since)
-        plant.status = watering_status(
-            days_since, plant.watering_interval_max, plant.watering_interval_min
-        )
-
+def home_endpoint(request: Request, db: Session = Depends(get_db)):
+    plants = get_all_plants_description(db)
     return templates.TemplateResponse(
         request, "index.html", {"request": request, "plants": plants}
     )
@@ -34,26 +31,15 @@ def create_plant_endpoint(
     watering_range: str | None = Form(None),
     db: Session = Depends(get_db),
 ):
-    plant = create_plant(db, name, watering_range)
-
-    db.add(plant)
-    db.commit()
+    create_plant(db, name, watering_range)
 
     return RedirectResponse("/", status_code=303)
 
 
 @router.post("/plants/{plant_id}/water")
-def water_plant(plant_id: int, db: Session = Depends(get_db)):
+def water_plant_endpoint(plant_id: int, db: Session = Depends(get_db)):
 
-    plant = db.query(Plant).get(plant_id)
-    if plant is None:
-        raise HTTPException(status_code=404, detail="Plant not found")
-
-    plant.last_watered_at = datetime.now(timezone.utc).replace(
-        hour=0, minute=0, second=0, microsecond=0
-    )
-
-    db.commit()
+    water_plant(plant_id, db)
 
     return RedirectResponse("/", status_code=303)
 
@@ -62,8 +48,7 @@ def water_plant(plant_id: int, db: Session = Depends(get_db)):
 def manage_plants(
     request: Request, edit: int | None = None, db: Session = Depends(get_db)
 ):
-    plants = db.query(Plant).all()
-
+    plants = get_all_plants(db)
     return templates.TemplateResponse(
         request,
         "manage_plants.html",
@@ -72,28 +57,29 @@ def manage_plants(
 
 
 @router.post("/plants/{plant_id}/edit")
-async def update_plant(plant_id: int, request: Request, db: Session = Depends(get_db)):
-    plant = db.query(Plant).filter(Plant.id == plant_id).first()
-
-    if not plant:
-        raise HTTPException(status_code=404, detail="Plant not found")
+async def update_plant_endpoint(
+    plant_id: int, request: Request, db: Session = Depends(get_db)
+):
 
     form = await request.form()
 
-    plant.name = str(form["name"])
-    plant.watering_min_days = int(str(form["watering_interval_min"]))
-    plant.watering_max_days = int(str(form["watering_interval_max"]))
-    plant.last_watered_at = datetime.fromisoformat(str(form["last_watered"])).replace(
-        tzinfo=timezone.utc
+    update_plant(
+        db=db,
+        plant_id=plant_id,
+        name=str(form["name"]),
+        watering_min_days=int(str(form["watering_interval_min"])),
+        watering_max_days=int(str(form["watering_interval_max"])),
+        last_watered_at=datetime.fromisoformat(str(form["last_watered"])).replace(
+            tzinfo=timezone.utc
+        ),
     )
-    db.commit()
 
     return RedirectResponse("/manage-plants", status_code=303)
 
 
 @router.get("/manage-places")
 def manage_places(request: Request, db: Session = Depends(get_db)):
-    plants = db.query(Plant).all()
+    plants = get_all_plants(db)
 
     return templates.TemplateResponse(
         request,

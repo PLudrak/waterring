@@ -1,5 +1,8 @@
 from app.models import Plant
 from app.database import SessionLocal
+from fastapi import HTTPException
+from datetime import datetime, timezone
+from sqlalchemy.orm import Session
 
 
 def parse_watering_range(value: str) -> tuple:
@@ -32,3 +35,47 @@ def create_plant(db, name: str, watering_interval):
     db.commit()
 
     return plant
+
+
+def water_plant(plant_id: int, db: Session):
+    plant = db.query(Plant).get(plant_id)
+    if plant is None:
+        raise HTTPException(status_code=404, detail="Plant not found")
+
+    plant.last_watered_at = datetime.now(timezone.utc).replace(
+        hour=0, minute=0, second=0, microsecond=0
+    )
+
+    db.commit()
+
+
+def update_plant(
+    db: Session,
+    plant_id: int,
+    name: str,
+    watering_min_days: int,
+    watering_max_days: int,
+    last_watered_at: datetime,
+):
+    plant = db.get(Plant, plant_id)
+
+    if plant is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Plant not found",
+        )
+
+    plant.name = name
+    plant.watering_min_days = watering_min_days
+    plant.watering_max_days = watering_max_days
+    plant.last_watered_at = last_watered_at
+
+    db.commit()
+
+    return plant
+
+
+def get_all_plants(db):
+    plants = db.query(Plant).all()
+
+    return plants
