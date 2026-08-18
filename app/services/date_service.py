@@ -1,6 +1,13 @@
 from datetime import datetime, timezone
 from app.models import Plant
 from app.services.plant_service import get_all_plants
+from enum import Enum
+
+
+class WateringStatus(str, Enum):
+    OK = "ok"
+    ALERT = "alert"
+    CRITICAL = "critical"
 
 
 def days_since_watered(last_watered_at: datetime) -> int:
@@ -19,7 +26,7 @@ def watering_text(days_since_watered) -> str:
 
 def watering_status(days_since, days_max, days_min):
     if days_since < days_min:
-        return "good"
+        return "ok"
     elif days_since < days_max:
         return "alert"
     else:
@@ -35,7 +42,17 @@ def get_all_plants_info(db):
         plant.status = watering_status(
             days_since, plant.watering_interval_max, plant.watering_interval_min
         )
+        plant.status_description = watering_status_desciription(plant.status)
     return plants
+
+
+def watering_status_desciription(status):
+    if status == WateringStatus.ALERT:
+        return "🥀💧 Needs water"
+    if status == WateringStatus.CRITICAL:
+        return "🍂 Needs urgent watering!"
+    else:
+        return "🌻 Ok"
 
 
 def get_plants_by_watering_status(db):
@@ -44,12 +61,16 @@ def get_plants_by_watering_status(db):
     plants_to_water = []
     plants_critical = []
     for plant in plants:
-        if plant.status == "critical":
+        if plant.status == WateringStatus.CRITICAL:
             plants_critical.append(plant)
-        elif plant.status == "alert":
+        elif plant.status == WateringStatus.ALERT:
             plants_to_water.append(plant)
         else:
             plants_watered.append(plant)
     for plant in plants_critical:
         print(plant.name)
-    return plants_watered, plants_to_water, plants_critical
+    return {
+        "watered": plants_watered,
+        "alert": plants_to_water,
+        "critical": plants_critical,
+    }
