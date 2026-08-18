@@ -74,8 +74,8 @@ async def update_plant_endpoint(
         db=db,
         plant_id=plant_id,
         name=str(form["name"]),
-        watering_min_days=int(str(form["watering_interval_min"])),
-        watering_max_days=int(str(form["watering_interval_max"])),
+        watering_min_days=int(str(form["watering_min_days"])),
+        watering_max_days=int(str(form["watering_max_days"])),
         last_watered_at=datetime.fromisoformat(str(form["last_watered"])).replace(
             tzinfo=timezone.utc
         ),
