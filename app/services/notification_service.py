@@ -25,6 +25,10 @@ def send_discord_notification(message: str):
 def create_notification_content(plants_by_status):
     plants_critical = plants_by_status[WateringStatus.CRITICAL]
     plants_to_water = plants_by_status[WateringStatus.ALERT]
+
+    if not plants_critical and not plants_to_water:
+        return None
+
     message = "Hello @everyone!\n\n"
 
     if plants_critical:
@@ -46,4 +50,5 @@ def send_notification(db):
     plants_statuses = get_plants_by_watering_status(db)
     message = create_notification_content(plants_statuses)
 
-    send_discord_notification(message)
+    if message:
+        send_discord_notification(message)
