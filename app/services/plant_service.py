@@ -1,11 +1,13 @@
-from app.models import Plant
-from app.database import SessionLocal
-from fastapi import HTTPException
+from fastapi import HTTPException, UploadFile
 from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 
+from app.services.file_service import upload_plant_image
+from app.models import Plant
+from app.database import SessionLocal
 
-def parse_watering_range(value: str) -> tuple:
+
+def parse_watering_range(value: str | None) -> tuple:
     if not value or value.strip() == "":
         return 6, 8
     if "-" in value:
@@ -19,21 +21,30 @@ def parse_watering_range(value: str) -> tuple:
     return min_days, max_days
 
 
-def create_plant(db, name: str, watering_interval):
+def create_plant(
+    db: Session,
+    name: str,
+    watering_interval: str | None,
+    image: UploadFile | None = None,
+):
 
     watering_interval_min, watering_interval_max = parse_watering_range(
         watering_interval
     )
+    image_path = None
+    if image:
+        image_path = upload_plant_image(image)
 
     plant = Plant(
         name=name,
         watering_interval_min=watering_interval_min,
         watering_interval_max=watering_interval_max,
+        image_path=image_path,
     )
 
     db.add(plant)
     db.commit()
-
+    db.refresh(plant)
     return plant
 
 

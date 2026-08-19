@@ -4,7 +4,7 @@
 <h1 class="text-4xl font-bold mb-8">
 	🌱 Plant Watcher
 </h1>
-<form action="/plants" method="post" class="bg-white p-4 rounded-xl shadow mb-8">
+<form action="/plants" method="post" enctype="multipart/form-data" class="bg-white p-4 rounded-xl shadow mb-8">
 	<div class="mb-4">
 		<input required type="text" name="name" placeholder="Plant name" class="border p-2 w-full rounded">
 	</div>
@@ -16,7 +16,7 @@
 		<textarea id="info" name="info" class="border rounded p-2 w-full resize-none" rows="3"
 			placeholder="Add your plant description/informations"></textarea>
 	</div>
-
+	<input type="file" name="image" accept="image/*" class="border rounded p-2">
 	<button class="bg-green-600 text-white px-4 py-2 rounded">
 		Add plant
 	</button>

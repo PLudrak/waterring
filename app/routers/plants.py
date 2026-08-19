@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends, Form, Request, HTTPException
+from fastapi import APIRouter, Depends, Form, Request, HTTPException, File, UploadFile
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from datetime import datetime, timezone
 
 from app.core.templates import templates
-from app.services.date_service import get_all_plants_info, get_plants_by_watering_status
+from app.services.date_service import get_all_plants_info
 from app.database import get_db
 from app.models import Plant
 from app.services.notification_service import send_notification
@@ -36,9 +36,10 @@ def notify_endpoint(request: Request, db: Session = Depends(get_db)):
 def create_plant_endpoint(
     name: str = Form(...),
     watering_range: str | None = Form(None),
+    image: UploadFile | None = File(None),
     db: Session = Depends(get_db),
 ):
-    create_plant(db, name, watering_range)
+    create_plant(db, name, watering_range, image)
 
     return RedirectResponse("/", status_code=303)
 
