@@ -66,8 +66,8 @@ def update_plant(
         )
 
     plant.name = name
-    plant.watering_min_days = watering_min_days
-    plant.watering_max_days = watering_max_days
+    plant.watering_interval_min = watering_min_days
+    plant.watering_interval_max = watering_max_days
     plant.last_watered_at = last_watered_at
 
     db.commit()
