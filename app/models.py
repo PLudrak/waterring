@@ -18,7 +18,7 @@ class Plant(Base):
     info: Mapped[str] = mapped_column(default="")
     place: Mapped[str] = mapped_column(default="")
 
-    image_path: Mapped[str] = mapped_column(String, nullable=True)
+    image_path: Mapped[str | None] = mapped_column(String, nullable=True)
 
 
 class Place(Base):

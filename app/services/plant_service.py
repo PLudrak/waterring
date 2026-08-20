@@ -2,7 +2,7 @@ from fastapi import HTTPException, UploadFile
 from datetime import datetime, timezone
 from sqlalchemy.orm import Session
 
-from app.services.file_service import upload_plant_image
+from app.services.file_service import upload_plant_image, update_plant_image
 from app.models import Plant
 from app.database import SessionLocal
 
@@ -60,13 +60,14 @@ def water_plant(plant_id: int, db: Session):
     db.commit()
 
 
-def update_plant(
+async def update_plant(
     db: Session,
     plant_id: int,
     name: str,
     watering_min_days: int,
     watering_max_days: int,
     last_watered_at: datetime,
+    image: UploadFile | None = None,
 ):
     plant = db.get(Plant, plant_id)
 
@@ -80,9 +81,12 @@ def update_plant(
     plant.watering_interval_min = watering_min_days
     plant.watering_interval_max = watering_max_days
     plant.last_watered_at = last_watered_at
-
+    if image and image.filename:
+        plant.image_path = await update_plant_image(
+            image=image, old_image_path=plant.image_path
+        )
     db.commit()
-
+    db.refresh(plant)
     return plant
 
 

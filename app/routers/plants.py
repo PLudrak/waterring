@@ -1,4 +1,13 @@
-from fastapi import APIRouter, Depends, Form, Request, HTTPException, File, UploadFile
+from fastapi import (
+    APIRouter,
+    Depends,
+    Form,
+    Request,
+    HTTPException,
+    File,
+    UploadFile,
+    Form,
+)
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from datetime import datetime, timezone
@@ -66,20 +75,28 @@ def manage_plants(
 
 @router.post("/plants/{plant_id}/edit")
 async def update_plant_endpoint(
-    plant_id: int, request: Request, db: Session = Depends(get_db)
+    plant_id: int,
+    name: str = Form(...),
+    watering_min_days: int = Form(...),
+    watering_max_days: int = Form(...),
+    last_watered: str = Form(...),
+    image: UploadFile | None = File(None),
+    db: Session = Depends(get_db),
 ):
 
-    form = await request.form()
+    if not isinstance(image, UploadFile):
+        image = None
 
-    update_plant(
+    await update_plant(
         db=db,
         plant_id=plant_id,
-        name=str(form["name"]),
-        watering_min_days=int(str(form["watering_min_days"])),
-        watering_max_days=int(str(form["watering_max_days"])),
-        last_watered_at=datetime.fromisoformat(str(form["last_watered"])).replace(
+        name=name,
+        watering_min_days=watering_min_days,
+        watering_max_days=watering_max_days,
+        last_watered_at=datetime.fromisoformat(last_watered).replace(
             tzinfo=timezone.utc
         ),
+        image=image,
     )
 
     return RedirectResponse("/manage-plants", status_code=303)
