@@ -8,18 +8,28 @@
     {% for plant in plants %}
 
     <div class="bg-white p-4 rounded-xl shadow flex justify-between">
-        <div>
-            <h2 class="font-bold text-xl">
-                {{ plant.name }}
-            </h2>
-            <h1 class="text-l"> {{plant.status_description}} </h1>
-            <p class="text-sm text-gray-500">
-                Last time watered <b>{{ plant.watered_label}}</b>
-            </p>
-            <p>
-                Every {{ plant.watering_interval_min }} to {{ plant.watering_interval_max }} days
-            </p>
+        <div class="flex justify-left">
 
+            <div class="w-24 h-24 shrink-0">
+                <img 
+                src="{% if plant.image_path %}/uploads/{{ plant.image_path }}{% else %}/static/images/plant_placeholder.png{% endif %}"
+                alt="{{ plant.name }}"
+                class="w-full h-full object-cover rounded-xl">
+            </div>
+            
+            <div>
+                <h2 class="font-bold text-xl">
+                    {{ plant.name }}
+                </h2>
+                <h1 class="text-l"> {{plant.status_description}} </h1>
+                <p class="text-sm text-gray-500">
+                    Last time watered <b>{{ plant.watered_label}}</b>
+                </p>
+                <p>
+                    Every {{ plant.watering_interval_min }} to {{ plant.watering_interval_max }} days
+                </p>
+                
+            </div>
         </div>
 
         <form action="/plants/{{ plant.id }}/water" method="post">
