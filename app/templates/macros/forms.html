@@ -1,0 +1,37 @@
+{% macro image_upload(
+    name="image",
+    initial_image=None,
+    label="Wybierz zdjęcie"
+) %}
+<div class="image-upload flex flex-col gap-3">
+
+    <div class="w-48 h-48">
+        <img
+            src="{{ initial_image or '/static/images/plant_placeholder.png' }}"
+            alt=""
+            class="image-preview w-full h-full object-cover rounded-xl"
+        >
+    </div>
+
+    <div class="flex items-center gap-3">
+        <label
+            class="cursor-pointer rounded-lg bg-green-600 px-4 py-2
+                   text-white hover:bg-green-700"
+        >
+            {{ label }}
+
+            <input
+                type="file"
+                name="{{ name }}"
+                accept="image/*"
+                class="image-input hidden"
+            >
+        </label>
+
+        <span class="file-name text-sm text-gray-500">
+            Nie wybrano pliku
+        </span>
+    </div>
+
+</div>
+{% endmacro %}
