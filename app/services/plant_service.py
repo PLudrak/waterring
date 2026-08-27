@@ -21,7 +21,7 @@ def parse_watering_range(value: str | None) -> tuple:
     return min_days, max_days
 
 
-def create_plant(
+async def create_plant(
     db: Session,
     name: str,
     watering_interval: str | None,
@@ -33,7 +33,7 @@ def create_plant(
     )
     image_path = None
     if image:
-        image_path = upload_plant_image(image)
+        image_path = await upload_plant_image(image)
 
     plant = Plant(
         name=name,

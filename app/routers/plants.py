@@ -42,13 +42,13 @@ def notify_endpoint(request: Request, db: Session = Depends(get_db)):
 
 
 @router.post("/plants")
-def create_plant_endpoint(
+async def create_plant_endpoint(
     name: str = Form(...),
     watering_range: str | None = Form(None),
     image: UploadFile | None = File(None),
     db: Session = Depends(get_db),
 ):
-    create_plant(db, name, watering_range, image)
+    await create_plant(db, name, watering_range, image)
 
     return RedirectResponse("/", status_code=303)
 
@@ -83,9 +83,6 @@ async def update_plant_endpoint(
     image: UploadFile | None = File(None),
     db: Session = Depends(get_db),
 ):
-
-    if not isinstance(image, UploadFile):
-        image = None
 
     await update_plant(
         db=db,
