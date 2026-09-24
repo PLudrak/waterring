@@ -5,7 +5,13 @@
 <h1 class="text-4xl font-bold mb-8">
 	🌱 Plant Watcher
 </h1>
-<form action="/plants" method="post" enctype="multipart/form-data" class="bg-white p-4 rounded-xl shadow mb-8">
+
+<details name="plant-actions" class="mb-8">
+	<summary class="bg-green-600 text-white px-4 py-2 rounded cursor-pointer w-fit">
+		Add plant
+	</summary>
+
+	<form action="/plants" method="post" enctype="multipart/form-data" class="bg-white p-4 rounded-xl shadow mt-4">
 	<div class="mb-4">
 		<input required type="text" name="name" placeholder="Plant name" class="border p-2 w-full rounded">
 	</div>
@@ -22,17 +28,22 @@
 		{{ image_upload(name="image") }}
 	</div>
 		<button class="bg-green-600 text-white px-4 py-2 rounded">
-			Add plant
+			Save plant
 		</button>
-</form>
+	</form>
+</details>
 <div class="space-y-4">
 
 	{% for plant in plants %}
 	{% if edit_id == plant.id %}
 
-	<div class="ring-2 ring-green-500 bg-white rounded-xl p-4">
-		
-		<form method="post" action="/plants/{{ plant.id }}/edit" enctype="multipart/form-data" class="flex flex-col gap-4">
+	<details name="plant-actions" open class="bg-white rounded-xl shadow open:ring-2 open:ring-green-500">
+		<summary class="flex cursor-pointer justify-between p-4 font-medium">
+			<span>{{ plant.name }}</span>
+			<span>Edit</span>
+		</summary>
+
+		<form method="post" action="/plants/{{ plant.id }}/edit" enctype="multipart/form-data" class="flex flex-col gap-4 p-4 pt-0">
 			<div class="flex flex-col md:flex-row">
 				<div class="space-y-2 pr-6 md:border-r">
 					
@@ -90,7 +101,7 @@
 				Save
 			</button>
 		</form>
-	</div>
+	</details>
 
 	{% else %}
 
